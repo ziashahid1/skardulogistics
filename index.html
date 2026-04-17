@@ -102,7 +102,24 @@
     .nav-links a:hover::after {
       width: 100%;
     }
+.menu-toggle {
+  display: none;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.18);
+  color: #ffffff;
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background .2s ease, border-color .2s ease, transform .2s ease;
+}
 
+.menu-toggle:hover {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.28);
+}
+    
     .cta {
       display: inline-flex;
       align-items: center;
@@ -478,10 +495,56 @@
     }
 
     @media (max-width: 760px) {
-      .nav-links { display: none; }
-      .hero-metrics { grid-template-columns: 1fr; }
-      h1 { max-width: none; }
-    }
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav {
+    overflow: visible;
+  }
+
+  .nav-inner {
+    align-items: center;
+    gap: 12px;
+    position: relative;
+  }
+
+  .nav-links {
+    display: flex;
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    min-width: 170px;
+    padding: 14px 16px;
+    background: rgba(8,19,40,0.98);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 16px;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.22);
+    z-index: 100;
+
+    /* 🔥 smooth animation */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    pointer-events: none;
+    transition: opacity .22s ease, transform .22s ease, visibility .22s ease;
+  }
+
+  .nav-links.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .hero-metrics { grid-template-columns: 1fr; }
+  h1 { max-width: none; }
+}
   </style>
 </head>
 <body>
@@ -491,7 +554,8 @@
         <img src="logo-transparent.png" alt="Skardu Logistics logo" />
         <span style="font-size:22px; line-height:1;">SKARDU LOGISTICS</span>
       </a>
-      <div class="nav-links">
+      <button class="menu-toggle" aria-label="Open menu">☰</button>
+<div class="nav-links">
         <a href="#services">Services</a>
         <a href="#why">Why Us</a>
         <a href="#contact">Contact</a>
@@ -640,7 +704,22 @@
   </footer>
 
   <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  const toggle = document.querySelector(".menu-toggle");
+  const menu = document.querySelector(".nav-links");
+
+  if (toggle && menu) {
+    toggle.addEventListener("click", () => {
+      menu.classList.toggle("open");
+    });
+
+    menu.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => {
+        menu.classList.remove("open");
+      });
+    });
+  }
+</script>
 </body>
 </html>
