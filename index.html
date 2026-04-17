@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skardu Logistics</title>
+  <style>
+    :root {
+      --navy: #081328;
+      --navy-2: #11284a;
+      --blue: #2d7fe0;
+      --blue-2: #67aaf2;
+      --orange: #f2a14a;
+      --orange-2: #ffb45e;
+      --white: #f8fbff;
+      --gray: #dce5f0;
+      --text-dark: #112033;
+      --cream: #f7f1e6;
+      --card: rgba(255,255,255,0.10);
+      --border: rgba(255,255,255,0.16);
+      --shadow: 0 18px 40px rgba(10, 28, 49, 0.20);
+      --radius: 22px;
+      --max: 1160px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 48px; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--white);
+      background: linear-gradient(180deg, #0a1429 0%, #10213f 24%, #f7f1e6 24%, #f7f1e6 100%);
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .wrap {
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(14px);
+      background: rgba(8,19,40,0.92); /* richer navy, less transparent */ /* softened navy instead of near-black */
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      font-size: 18px;
+    }
+
+    .brand img {
+      width: 56px;
+      height: auto;
+      display: block;
+      transition: transform .2s ease;
+    }
+    .brand img:hover {
+      transform: scale(1.05);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 22px;
+      color: #ffffff; /* brighter white */
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .nav-links a {
+      position: relative;
+      transition: color .2s ease;
+    }
+    .nav-links a:hover {
+      color: var(--orange-2);
+    }
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0%;
+      height: 2px;
+      background: var(--orange-2);
+      transition: width .2s ease;
+    }
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 22px;
+      border-radius: 999px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease;
+    }
+
+    .cta:hover { transform: translateY(-1px); }
+
+    .cta-primary {
+      background: linear-gradient(135deg, var(--orange), var(--orange-2));
+      color: #09111f;
+      box-shadow: 0 12px 30px rgba(255,138,31,0.28);
+    }
+
+    .cta-secondary {
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.05);
+      color: var(--white);
+    }
+
+    .hero {
+      padding: 52px 0 40px;
+      background:
+        radial-gradient(circle at top left, rgba(103,170,242,0.20), transparent 28%),
+        radial-gradient(circle at right center, rgba(242,161,74,0.15), transparent 20%),
+        linear-gradient(180deg, #081328 0%, #11284a 100%);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-side {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #ffffff; /* brighter text */
+      padding: 8px 14px;
+      border: 1px solid rgba(242,161,74,0.55); /* stronger orange border */
+      border-radius: 999px;
+      background: rgba(242,161,74,0.18); /* a bit more presence */
+      margin-bottom: 18px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(42px, 7vw, 74px);
+      line-height: 0.96;
+      letter-spacing: -0.04em;
+      max-width: 9ch;
+      color: #ffffff;
+    }
+    .accent { color: var(--orange-2); }
+
+    .hero p {
+      margin: 20px 0 0;
+      color: #d8e2ef;
+      font-size: clamp(16px, 2.3vw, 20px);
+      line-height: 1.7;
+      max-width: 58ch;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .hero-card {
+      position: relative;
+      background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.04));
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 28px;
+      box-shadow: 0 18px 40px rgba(10, 28, 49, 0.24);
+      overflow: hidden;
+      min-height: 340px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at center, rgba(103,170,242,0.22), transparent 42%),
+        radial-gradient(circle at 72% 76%, rgba(242,161,74,0.16), transparent 24%);
+      pointer-events: none;
+    }
+
+    .hero-logo {
+      position: relative;
+      max-width: 100%;
+      width: 100%;
+      max-height: 300px;
+      object-fit: contain;
+      filter: drop-shadow(0 24px 40px rgba(0,0,0,0.35));
+      margin-top: -20px;
+      object-fit: contain;
+      filter: drop-shadow(0 24px 40px rgba(0,0,0,0.35));
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 0;
+    }
+
+    .metric {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 18px;
+      padding: 14px 16px;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+    .metric:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 22px 50px rgba(0,0,0,0.28);
+      border-color: rgba(255,180,94,0.6);
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 19px;
+      margin-bottom: 6px;
+      color: var(--orange-2);
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    .metric span {
+      color: #ffffff;
+      font-size: 13px;
+      line-height: 1.55;
+      font-weight: 500;
+      opacity: 0.95;
+    }
+
+    section {
+      padding: 52px 0;
+      color: var(--text-dark);
+      scroll-margin-top: 48px;
+      
+    }
+    /* micro-adjust for specific anchors */
+    #why, #contact { scroll-margin-top: 36px; }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(30px, 4vw, 44px);
+      letter-spacing: -0.03em;
+      color: #0f213a;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: #5e6e83;
+      max-width: 52ch;
+      line-height: 1.7;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(15,33,58,0.10);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: 0 18px 40px rgba(10, 28, 49, 0.08);
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 22px 50px rgba(10,28,49,0.18);
+      border-color: rgba(242,161,74,0.35);
+    }
+
+    .card.dark {
+      background: linear-gradient(180deg, #10213f, #16314f);
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .card.dark p, .card.dark h3, .card.dark h2 { color: var(--white); }
+
+    .icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(242,161,74,0.22), rgba(103,170,242,0.22));
+      border: 1px solid rgba(242,161,74,0.22);
+      font-size: 20px;
+      margin-bottom: 14px;
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 22px;
+      color: #0f213a;
+    }
+
+    .card p {
+      margin: 0;
+      color: #5e6e83;
+      line-height: 1.75;
+      font-size: 15px;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .story-panel {
+      background: linear-gradient(180deg, #0e1d39, #16314f);
+      color: var(--white);
+      min-height: 100%;
+    }
+
+    .story-panel .mini-badge {
+      display: inline-block;
+      margin-top: 18px;
+      background: linear-gradient(135deg, var(--orange), var(--orange-2));
+      color: #09111f;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .check-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .mini-card {
+      border: 1px solid rgba(15,33,58,0.12);
+      border-radius: 16px;
+      padding: 16px 18px;
+      background: rgba(255,255,255,0.75);
+    }
+
+    .mini-card strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #0f213a;
+      font-size: 18px;
+    }
+
+    .mini-card span {
+      color: #5e6e83;
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .why {
+      background:
+        radial-gradient(circle at top center, rgba(103,170,242,0.18), transparent 22%),
+        linear-gradient(180deg, #0b1930 0%, #10213f 100%);
+      color: var(--white);
+      margin-top: 12px;
+    }
+
+    .why h2, .why .section-head p, .why .card h3, .why .card p { color: var(--white); }
+    .why .section-head p { color: #cdd9ea; }
+    .why .card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.16);
+    }
+
+    .contact-top {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: stretch;
+      margin-bottom: 28px;
+    }
+
+    .contact-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .contact-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .contact-item {
+      padding: 14px 18px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(15,33,58,0.10);
+    }
+
+    .contact-item small {
+      display: block;
+      color: #7d8ea4;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 11px;
+    }
+
+    .contact-item strong {
+      font-size: 18px;
+      color: #0f213a;
+    }
+
+    .footer {
+      padding: 36px 0 52px;
+      color: #dbe5f2;
+      font-size: 14px;
+      background: linear-gradient(180deg, #10213f, #0b1930);
+    }
+
+    .footer-inner {
+      border-top: 1px solid rgba(255,255,255,0.10);
+      padding-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid, .split, .cards, .check-list, .contact-top, .contact-row { grid-template-columns: 1fr; }
+      .hero-card { min-height: 320px; }
+      .hero-metrics { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 760px) {
+      .nav-links { display: none; }
+      .hero-metrics { grid-template-columns: 1fr; }
+      h1 { max-width: none; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="wrap nav-inner">
+      <a href="#top" class="brand">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAArwAAAHTCAYAAADF8MtRAADdrUlEQVR42uzdd6AkVZU/8O8591ZVd788zWzjfl+CAAeQHfBmRWSz78ICLCgiKuA1dRQR53XX3QPiPZhmwb/uXkAEQZhZQJIFQgaSmTTLe5d77q6q+uP+qKrqqn7dvdl9D/L7PA9P1zT3nD4vv6rq1KlTVU8IIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCiB9M6wNACCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEII8YAkA4QQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhPgBlQxACCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEOIHSVJACCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEOIHVDIAIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQojfUMkAhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCF+QCUD..." alt="Skardu Logistics logo" />
+        <span style="font-size:22px; line-height:1;">SKARDU LOGISTICS</span>
+      </a>
+      <div class="nav-links">
+        <a href="#services">Services</a>
+        <a href="#why">Why Us</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="top" style="scroll-margin-top: 48px;">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="eyebrow">Friendly • Dependable • Personal</div>
+          <h1><span class="accent">Dependable</span> delivery with a <span class="accent">personal touch</span>.</h1>
+          <p>Skardu Logistics is a small, owner-operated delivery business built on reliability, communication, and personal service. When you work with us, you are dealing directly with the owner, which means clear updates, dependable follow-through, and service that feels human from start to finish. We handle both regional deliveries and longer runs across the lower 48 states.</p>
+          <div class="hero-actions">
+            <a class="cta cta-primary" href="tel:4049333136">Call or Text 404-933-3136</a>
+            <a class="cta cta-secondary" href="mailto:dispatch@skardulogistics.com">Email Dispatch</a>
+          </div>
+        </div>
+        <div class="hero-side">
+          <div class="hero-card">
+          <img class="hero-logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAArwAAAHTCAYAAADF8MtRAADdrUlEQVR42uzdd6AkVZU/8O8591ZVd788zWzjfl+CAAeQHfBmRWSz78ICLCgiKuA1dRQR53XX3QPiPZhmwb/uXkAEQZhZQJIFQgaSmTTLe5d77q6q+uP+qKrqqn7dvdl9D/L7PA9P1zT3nD4vv6rq1KlTVU8IIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCiB9M6wNACCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEII8YAkA4QQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhPgBlQxACCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEOIHSVJACCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEOIHVDIAIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQojfUMkAhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCF+QCUD..." alt="Skardu Logistics" />
+                  </div>
+          <div class="hero-metrics">
+            <div class="metric">
+              <strong>Owner-Operated</strong>
+              <span>You work directly with the owner for a more personal, responsive experience.</span>
+            </div>
+            <div class="metric">
+              <strong>Dependable Service</strong>
+              <span>Clear communication, honest follow-through, and care with every delivery.</span>
+            </div>
+            <div class="metric">
+              <strong>Small Business Care</strong>
+              <span>A local business people can feel good about supporting and recommending.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="services">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>What we offer</h2>
+          </div>
+          <p>A simple, welcoming online presence that shows customers exactly what you offer: dependable service, direct communication, and the care that comes from working with a small business.</p>
+        </div>
+        <div class="cards">
+          <div class="card">
+            <div class="icon">🚚</div>
+            <h3>Local & Regional Delivery</h3>
+            <p>Reliable van-based delivery service for local and regional jobs, with the same level of care and communication every step of the way.</p>
+          </div>
+          <div class="card">
+            <div class="icon">⏱️</div>
+            <h3>Time-Sensitive & Long Distance</h3>
+            <p>From urgent local deliveries to longer runs across the lower 48 states, we focus on fast response and clear updates.</p>
+          </div>
+          <div class="card">
+            <div class="icon">📍</div>
+            <h3>Direct Owner Contact</h3>
+            <p>No handoffs and no runaround. You can reach me directly by phone or email.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="why">
+      <div class="wrap split">
+        <div class="card story-panel">
+          <div style="opacity:.75; text-transform:uppercase; letter-spacing:.12em; font-size:13px; margin-bottom:12px;">Our Story</div>
+          <h2 style="margin:0 0 14px; font-size: clamp(32px,4vw,48px); letter-spacing:-0.04em; color: var(--white);">A little about Skardu Logistics</h2>
+          <p style="color:#d5e0ef; line-height:1.8; font-size:16px;">I started Skardu Logistics because I believed there was a better way to do deliveries — one where you're not just another tracking number, but a customer working directly with the person handling the job.</p>
+          <p style="color:#d5e0ef; line-height:1.8; font-size:16px; margin-top:16px;">When you call, you talk to me. Whether it's a quick local drop, a regional run, or a longer trip across the lower 48 states, I bring the same care, reliability, and direct communication to every delivery.</p>
+          <div class="mini-badge">One-on-One Service</div>
+        </div>
+        <div>
+          <div class="section-head" style="margin-bottom:14px; display:block;">
+            <h2 style="margin-bottom:10px;">Why Choose Us</h2>
+            <p>In a world of automated logistics and faceless freight companies, Skardu Logistics offers a more personal, dependable experience.</p>
+          </div>
+          <div class="check-list">
+            <div class="mini-card"><strong>Owner-Operated</strong><span>You're hiring the driver directly, not a dispatcher managing a fleet.</span></div>
+            <div class="mini-card"><strong>Personal Attention</strong><span>Your delivery is handled with care and communication from start to finish.</span></div>
+            <div class="mini-card"><strong>Reliable & On-Time</strong><span>I respect your schedule and your customer's time on every job.</span></div>
+            <div class="mini-card"><strong>Direct Communication</strong><span>Call or text directly with no runaround and no handoffs.</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+
+    <section id="contact">
+      <div class="wrap">
+
+        <div class="contact-top">
+          <div>
+            <div class="section-head" style="display:block; margin-bottom:12px;">
+              <h2 style="margin-bottom:10px;">Ready to ship? Let's talk.</h2>
+              <p>Need help with a delivery, have a quick question, or just want to check availability? Feel free to reach out anytime — I’m always happy to help and will get back to you as soon as I can.</p>
+            </div>
+
+            <div class="card" style="margin-top:8px; padding:18px 20px;">
+              <div style="font-weight:700; color:#0f213a; margin-bottom:4px;">Available for new jobs</div>
+              <div style="color:#5e6e83; line-height:1.65;">Typical response within 2–4 hours. Same-day quote requests are welcome by phone or email.</div>
+            </div>
+          </div>
+
+          <div class="card" style="padding:28px 26px; display:flex; flex-direction:column; justify-content:center;">
+            <h3 style="margin-top:0; font-size:26px;">Get a Free Quote</h3>
+            <p style="color:#5e6e83; line-height:1.7; margin-bottom:18px;">The fastest way to get started is to call, text, or email directly. A quick message with pickup, delivery, and timing is all you need.</p>
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+              <a class="cta cta-primary" href="tel:4049333136">Call or Text 404-933-3136</a>
+              <a class="cta cta-secondary" style="color:#0f213a; border-color:rgba(15,33,58,0.12); background:rgba(255,255,255,0.72);" href="mailto:dispatch@skardulogistics.com">Email Dispatch</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-row">
+          <div class="contact-item">
+            <small>Phone / Text</small>
+            <strong style="display:flex; align-items:center; gap:10px;"><span style="font-size:18px; opacity:.75;">📞</span><a href="tel:4049333136">404-933-3136</a></strong>
+          </div>
+          <div class="contact-item">
+            <small>Email</small>
+            <strong style="display:flex; align-items:center; gap:10px;"><span style="font-size:18px; opacity:.75;">✉️</span><a href="mailto:dispatch@skardulogistics.com">dispatch@skardulogistics.com</a></strong>
+          </div>
+          <div class="contact-item">
+            <small>Service Area</small>
+            <strong style="display:flex; align-items:center; gap:10px;"><span style="font-size:18px; opacity:.75;">📍</span><span>Local • Regional • Lower 48 States</span></strong>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <div>© <span id="year"></span> Skardu Logistics LLC. All rights reserved.</div>
+      <div>Built with pride, service, and a personal touch.</div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
